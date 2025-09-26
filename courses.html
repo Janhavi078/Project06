@@ -1,0 +1,46 @@
+ <!DOCTYPE html>
+ <html lang="en">
+ <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+      
+      <script src="style.js"></script>
+     <link rel="stylesheet" href="style.css">
+      
+ </head>
+ <body>
+    <header>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="courses.html">Courses</a>
+    </nav>
+  </header>
+
+    <section id="courses" class="mb-32">
+             <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold text-white mb-3 animated-element">Explore Our Skill Hub</h2>
+                <p class="text-lg text-gray-400 max-w-2xl mx-auto animated-element">Dive into comprehensive courses designed to accelerate your learning journey.</p>
+            </div>
+            
+            <!-- Filter Tags -->
+            <div class="flex flex-wrap justify-center gap-2 md:gap-4 mb-12 animated-element" id="course-filters">
+                <button class="filter-btn active" data-filter="all">All Courses</button>
+                <button class="filter-btn" data-filter="web-dev">Web Development</button>
+                <button class="filter-btn" data-filter="data-science">Data Science</button>
+                <button class="filter-btn" data-filter="python">Python</button>
+                <button class="filter-btn" data-filter="java">Java</button>
+                <button class="filter-btn" data-filter="cpp">C++</button>
+            </div>
+            
+            <!-- Course Grid -->
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8" id="course-grid">
+                <!-- Course cards will be injected here by JS -->
+            </div>
+        </section>
+        <script src="page.js"></script>
+       
+
+ </body>
+ </html>
+        
