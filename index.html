@@ -1,196 +1,151 @@
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UniLeap - Your Career Co-pilot</title>
-    
+
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Google Fonts: Inter -->
-     <link rel="stylesheet" href="style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        'brand-charcoal': '#121212',
+                        'brand-dark': '#1A1A1A',
+                        'brand-accent': '#6366F1',
+                        'brand-accent-hover': '#4F46E5',
+                    },
+                    animation: {
+                        'fade-in-up': 'fadeInUp 0.8s ease-out forwards',
+                        'glow': 'glow 2.5s ease-in-out infinite alternate',
+                    },
+                    keyframes: {
+                        fadeInUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        glow: {
+                            '0%': { 'box-shadow': '0 0 5px #6366F1, 0 0 10px #6366F1, 0 0 15px #6366F1' },
+                            '100%': { 'box-shadow': '0 0 20px #6366F1, 0 0 30px #6366F1, 0 0 40px #6366F1' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
 
-    <!-- Three.js for Hero Animation -->
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+
+    <!-- Three.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
-    <!-- Tailwind configuration remains here in the <head> -->
-        <script src="style.js"></script>
+    <!-- Custom JS -->
+    <script defer src="page.js"></script>
 </head>
-<body class="antialiased">
+
+<body class="antialiased bg-brand-dark text-white">
 
     <!-- Header -->
     <header id="header" class="fixed top-0 left-0 right-0 z-[9999] transition-all duration-300">
         <div class="container mx-auto px-6 py-4">
             <div class="flex items-center justify-between glass-card rounded-xl p-3">
-                <a href="#" class="text-2xl font-bold text-white flex items-center">
-                     <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-brand-accent mr-2"><path d="M12 22h.01"/><path d="M12 2a10 10 0 0 0-10 10c0 4.42 3.58 8 8 8s8-3.58 8-8a10 10 0 0 0-10-10z"/><path d="M12 12a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/></svg>
-                    UniLeap
+                <a href="#" class="text-2xl font-bold flex items-center">
+                    <span class="text-brand-accent mr-2">UniLeap</span>
                 </a>
-                <nav class="hidden md:flex items-center space-x-8 z-50">
-                    <a href="index.html">Home</a>
-                    <a href="#features" class="text-gray-300 hover:text-white transition">Features</a>
-                    <a href="courses.html" class="text-gray-300 hover:text-white transition">Courses</a>
-                    <a href="#testimonials" class="text-gray-300 hover:text-white transition">Testimonials</a>
+                <nav class="hidden md:flex items-center space-x-8">
+                    <a href="#home">Home</a>
+                    <a href="#features">Features</a>
+                    <a href="#courses">Courses</a>
+                    <a href="#testimonials">Testimonials</a>
                 </nav>
                 <a href="#" class="hidden md:block bg-brand-accent hover:bg-brand-accent-hover text-white font-semibold py-2 px-5 rounded-lg transition">
                     Get Started
                 </a>
-                <button id="mobile-menu-btn" class="md:hidden text-white">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+                <button id="mobile-menu-btn" class="md:hidden">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="4" x2="20" y1="12" y2="12" />
+                        <line x1="4" x2="20" y1="6" y2="6" />
+                        <line x1="4" x2="20" y1="18" y2="18" />
+                    </svg>
                 </button>
             </div>
         </div>
+
         <!-- Mobile Menu -->
         <div id="mobile-menu" class="hidden md:hidden px-6 pb-4">
-            <div class="glass-card rounded-xl p-4 flex flex-col space-y-4 z-50">
-                <a href="index.html">Home</a>
-                 <a href="#features" class="text-gray-300 hover:text-white transition block">Features</a>
-                 <a href="courses.html" class="text-gray-300 hover:text-white transition block">Courses</a>
-                 <a href="#testimonials" class="text-gray-300 hover:text-white transition block">Testimonials</a>
-                 <a href="#" class="bg-brand-accent hover:bg-brand-accent-hover text-white font-semibold py-2 px-5 rounded-lg transition text-center">
+            <div class="glass-card rounded-xl p-4 flex flex-col space-y-4">
+                <a href="#home">Home</a>
+                <a href="#features">Features</a>
+                <a href="#courses">Courses</a>
+                <a href="#testimonials">Testimonials</a>
+                <a href="#" class="bg-brand-accent hover:bg-brand-accent-hover text-white font-semibold py-2 px-5 rounded-lg text-center">
                     Get Started
                 </a>
             </div>
         </div>
     </header>
 
-    <!-- Hero Section -->
+    <!-- Hero -->
     <section id="home" class="relative min-h-screen flex items-center justify-center overflow-hidden">
-        <canvas id="hero-canvas"  class="absolute inset-0 z-0"></canvas>
+        <canvas id="hero-canvas" class="absolute inset-0 z-0"></canvas>
         <div class="hero-content relative z-10 text-center px-6">
-            <h1 class="text-5xl md:text-7xl font-extrabold text-white leading-tight mb-4 animated-element" style="animation-delay: 0.2s;">
+            <h1 class="text-5xl md:text-7xl font-extrabold mb-4 animated-element">
                 Your Career Takes <span class="text-brand-accent">Flight</span> Here.
             </h1>
-            <p class="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto mb-8 animated-element" style="animation-delay: 0.4s;">
+            <p class="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto mb-8 animated-element">
                 Personalized roadmaps, hands-on practice, and AI-powered interview prep to help you land your dream job.
             </p>
-            <div class="w-full max-w-2xl mx-auto mb-8 animated-element" style="animation-delay: 0.6s;">
-                <div class="relative">
-                    <input type="search" placeholder="Search for roles, skills, or companies..." class="w-full py-4 pl-12 pr-4 text-white bg-brand-dark bg-opacity-70 border border-gray-700 rounded-full focus:ring-2 focus:ring-brand-accent focus:outline-none transition">
-                    <svg class="absolute left-4 top-1/2 -translate-y-1/2 h-6 w-6 text-gray-400" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                </div>
+
+            <!-- Search Form -->
+            <div class="w-full max-w-2xl mx-auto mb-8 animated-element">
+                <form id="search-form" class="relative">
+                    <input type="search" id="search-input" placeholder="Search for roles, skills, or companies..."
+                        class="w-full py-4 pl-12 pr-12 text-white bg-brand-dark bg-opacity-70 border border-gray-700 rounded-full focus:ring-2 focus:ring-brand-accent focus:outline-none transition">
+                    <button type="submit" class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                    </button>
+                </form>
             </div>
-            <div class="animated-element" style="animation-delay: 0.8s;">
-                <a href="#features" class="bg-brand-accent hover:bg-brand-accent-hover text-white font-bold py-4 px-10 rounded-full text-lg transition transform hover:scale-105 shadow-lg shadow-brand-accent/30 animate-glow">
-                    Chart Your Course
-                </a>
-            </div>
+
+            <a href="#features" class="bg-brand-accent hover:bg-brand-accent-hover text-white font-bold py-4 px-10 rounded-full text-lg transition transform hover:scale-105 shadow-lg shadow-brand-accent/30 animate-glow animated-element">
+                Chart Your Course
+            </a>
         </div>
     </section>
 
-    <!-- Main Content -->
-    <main class="container mx-auto px-6 py-24">
-        
-        <!-- Features Section -->
-        <section id="features" class="mb-32">
-            <div class="text-center mb-16">
-                <h2 class="text-4xl font-bold text-white mb-3 animated-element">Your All-in-One Career Co-pilot</h2>
-                <p class="text-lg text-gray-400 max-w-2xl mx-auto animated-element">From first step to final offer, we've got you covered.</p>
-            </div>
-            <div class="grid md:grid-cols-3 gap-8">
-                <!-- Feature 1: Roadmaps -->
-                <div class="glass-card p-8 rounded-2xl text-center animated-element">
-                    <div class="flex items-center justify-center h-16 w-16 bg-brand-accent/20 text-brand-accent rounded-full mx-auto mb-6">
-                         <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><path d="m9 18 3-3 3 3"/><path d="m9 6 3 3 3-3"/></svg>
-                    </div>
-                    <h3 class="text-2xl font-bold text-white mb-3">Personalized Roadmaps</h3>
-                    <p class="text-gray-400">Guided, step-by-step learning paths tailored to your dream career, from developer to data scientist.</p>
-                </div>
-                <!-- Feature 2: Skill Hub -->
-                <div class="glass-card p-8 rounded-2xl text-center animated-element" style="animation-delay: 0.2s;">
-                    <div class="flex items-center justify-center h-16 w-16 bg-brand-accent/20 text-brand-accent rounded-full mx-auto mb-6">
-                         <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m18 16 4-4-4-4"/><path d="m6 8-4 4 4 4"/><path d="m14.5 4-5 16"/></svg>
-                    </div>
-                    <h3 class="text-2xl font-bold text-white mb-3">Skill Hub & Live Labs</h3>
-                    <p class="text-gray-400">Master in-demand tech with high-quality courses and code in a real environment, right in your browser.</p>
-                </div>
-                <!-- Feature 3: Interview Arena -->
-                <div class="glass-card p-8 rounded-2xl text-center animated-element" style="animation-delay: 0.4s;">
-                    <div class="flex items-center justify-center h-16 w-16 bg-brand-accent/20 text-brand-accent rounded-full mx-auto mb-6">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 12a5 5 0 1 0 0-10 5 5 0 0 0 0 10z"/><path d="M12 14c-2.76 0-5 3-5 5h10c0-2-2.24-5-5-5z"/></svg>
-                    </div>
-                    <h3 class="text-2xl font-bold text-white mb-3">The Interview Arena</h3>
-                    <p class="text-gray-400">Practice with AI-powered mock interviews, solve real questions, and get feedback to ace the final round.</p>
-                </div>
-            </div>
-        </section>
+    <!-- Courses Section -->
+    <section id="courses" class="container mx-auto px-6 py-24">
+        <h2 class="text-4xl font-bold text-white mb-8 text-center animated-element">Our Courses</h2>
+        <div id="course-filters" class="flex justify-center space-x-4 mb-12">
+            <button class="filter-btn active bg-brand-accent text-white px-4 py-2 rounded-full" data-filter="all">All</button>
+            <button class="filter-btn bg-gray-700 text-white px-4 py-2 rounded-full" data-filter="web-dev">Web Dev</button>
+            <button class="filter-btn bg-gray-700 text-white px-4 py-2 rounded-full" data-filter="data-science">Data Science</button>
+            <button class="filter-btn bg-gray-700 text-white px-4 py-2 rounded-full" data-filter="cpp">C++</button>
+            <button class="filter-btn bg-gray-700 text-white px-4 py-2 rounded-full" data-filter="java">Java</button>
+        </div>
+        <div id="course-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+    </section>
 
-       
-        <!-- Testimonials Section -->
-        <section id="testimonials" class="mb-32">
-            <div class="text-center mb-16">
-                <h2 class="text-4xl font-bold text-white mb-3 animated-element">Trusted by Thousands of Students</h2>
-                <p class="text-lg text-gray-400 max-w-2xl mx-auto animated-element">Hear what your peers have to say about their journey with UniLeap.</p>
-            </div>
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <div class="glass-card p-8 rounded-2xl animated-element">
-                    <p class="text-gray-300 mb-6">"The personalized roadmap was a game-changer. I knew exactly what to learn and in what order. Landed a job at Google!"</p>
-                    <div class="flex items-center">
-                        <img src="https://placehold.co/40x40/7c3aed/ffffff?text=AV" class="rounded-full mr-4" alt="Avatar">
-                        <div>
-                            <p class="font-bold text-white">Ananya Verma</p>
-                            <p class="text-sm text-gray-400">Software Engineer, Google</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="glass-card p-8 rounded-2xl animated-element" style="animation-delay: 0.2s;">
-                    <p class="text-gray-300 mb-6">"UniLeap's live labs are incredible. No setup, just pure coding. It's the best way to practice for technical rounds."</p>
-                     <div class="flex items-center">
-                        <img src="https://placehold.co/40x40/7c3aed/ffffff?text=RS" class="rounded-full mr-4" alt="Avatar">
-                        <div>
-                            <p class="font-bold text-white">Rohan Sharma</p>
-                            <p class="text-sm text-gray-400">Backend Developer, Amazon</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="glass-card p-8 rounded-2xl animated-element" style="animation-delay: 0.4s;">
-                    <p class="text-gray-300 mb-6">"The AI mock interviews gave me the confidence I needed. The feedback was spot on and helped me improve my communication skills."</p>
-                     <div class="flex items-center">
-                        <img src="https://placehold.co/40x40/7c3aed/ffffff?text=PS" class="rounded-full mr-4" alt="Avatar">
-                        <div>
-                            <p class="font-bold text-white">Priya Singh</p>
-                            <p class="text-sm text-gray-400">Data Analyst, Microsoft</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- CTA Section -->
-        <section id="cta" class="glass-card rounded-3xl p-10 md:p-16 text-center">
-             <h2 class="text-4xl font-bold text-white mb-4 animated-element">Ready to Leap Into Your Career?</h2>
-             <p class="text-lg text-gray-300 max-w-2xl mx-auto mb-8 animated-element">Join thousands of students and get on the fast track to your dream job today. Your future starts now.</p>
-             <div class="animated-element">
-                 <a href="#" class="bg-brand-accent hover:bg-brand-accent-hover text-white font-bold py-4 px-10 rounded-full text-lg transition transform hover:scale-105 shadow-lg shadow-brand-accent/30 animate-glow">
-                    Start for Free
-                </a>
-             </div>
-        </section>
-
-    </main>
-    
     <!-- Footer -->
     <footer class="border-t border-gray-800 mt-24">
         <div class="container mx-auto px-6 py-8 text-center text-gray-400">
-            <p>&copy; 2025 UniLeap. All rights reserved. Built to help students achieve their dreams.</p>
-             <div class="flex justify-center space-x-6 mt-4">
-                <a href="#" class="hover:text-white">Privacy Policy</a>
-                <a href="#" class="hover:text-white">Terms of Service</a>
-                <a href="#" class="hover:text-white">Contact</a>
-            </div>
+            <p>&copy; 2025 UniLeap. All rights reserved.</p>
         </div>
     </footer>
 
-    <!-- ** THE FIX IS HERE ** -->
-    <!-- The script source is now correctly pointing to your file "page.js" -->
-     
-    <script src="page.js"></script>
-
-
 </body>
-</html>
 
+</html>
