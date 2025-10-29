@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auth System Test - UniLeap</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'brand-charcoal': '#121212',
+                        'brand-dark': '#1A1A1A',
+                        'brand-accent': '#6366F1',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #121212; color: #E5E7EB; }
+    </style>
+</head>
+<body class="p-8">
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-4xl font-bold text-white mb-8">🔐 Authentication System Test</h1>
+        
+        <!-- Status Check -->
+        <div class="bg-brand-dark p-6 rounded-lg mb-6">
+            <h2 class="text-2xl font-bold mb-4">Authentication Status</h2>
+            <div id="authStatus" class="space-y-2">
+                <p>Loading...</p>
+            </div>
+        </div>
+
+        <!-- Current User -->
+        <div class="bg-brand-dark p-6 rounded-lg mb-6">
+            <h2 class="text-2xl font-bold mb-4">Current User</h2>
+            <div id="currentUser">
+                <p class="text-gray-400">No user logged in</p>
+            </div>
+        </div>
+
+        <!-- API Test -->
+        <div class="bg-brand-dark p-6 rounded-lg mb-6">
+            <h2 class="text-2xl font-bold mb-4">API Test</h2>
+            <div class="space-y-4">
+                <button onclick="testSignup()" class="bg-green-600 hover:bg-green-700 px-4 py-2 rounded">
+                    Test Signup API
+                </button>
+                <button onclick="testLogin()" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded ml-2">
+                    Test Login API
+                </button>
+                <button onclick="testProfile()" class="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded ml-2">
+                    Test Profile API
+                </button>
+                <button onclick="clearAuth()" class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded ml-2">
+                    Clear Auth
+                </button>
+            </div>
+            <pre id="apiResult" class="mt-4 bg-black p-4 rounded overflow-auto max-h-96 text-sm"></pre>
+        </div>
+
+        <!-- Quick Links -->
+        <div class="bg-brand-dark p-6 rounded-lg">
+            <h2 class="text-2xl font-bold mb-4">Quick Links</h2>
+            <div class="space-y-2">
+                <a href="/" class="text-brand-accent hover:underline block">→ Home Page</a>
+                <a href="/login" class="text-brand-accent hover:underline block">→ Login Page</a>
+                <a href="/signup" class="text-brand-accent hover:underline block">→ Signup Page</a>
+                <a href="/courses" class="text-brand-accent hover:underline block">→ Courses Page</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = window.location.origin + '/api/auth';
+        
+        function updateAuthStatus() {
+            const token = localStorage.getItem('authToken');
+            const user = localStorage.getItem('user');
+            
+            const statusDiv = document.getElementById('authStatus');
+            const userDiv = document.getElementById('currentUser');
+            
+            if (token && user) {
+                const userData = JSON.parse(user);
+                statusDiv.innerHTML = `
+                    <p class="text-green-400">✅ User is logged in</p>
+                    <p class="text-sm text-gray-400">Token: ${token.substring(0, 30)}...</p>
+                `;
+                userDiv.innerHTML = `
+                    <div class="space-y-2">
+                        <p><strong>Name:</strong> ${userData.name}</p>
+                        <p><strong>Email:</strong> ${userData.email}</p>
+                        <p><strong>ID:</strong> ${userData.id}</p>
+                    </div>
+                `;
+            } else {
+                statusDiv.innerHTML = `<p class="text-red-400">❌ No user logged in</p>`;
+                userDiv.innerHTML = `<p class="text-gray-400">No user logged in</p>`;
+            }
+        }
+
+        async function testSignup() {
+            const randomNum = Math.floor(Math.random() * 10000);
+            const result = document.getElementById('apiResult');
+            result.textContent = 'Testing signup...';
+            
+            try {
+                const response = await fetch(`${API_BASE}/signup`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name: `Test User ${randomNum}`,
+                        email: `test${randomNum}@example.com`,
+                        password: 'password123'
+                    })
+                });
+                
+                const data = await response.json();
+                result.textContent = JSON.stringify(data, null, 2);
+                
+                if (data.success) {
+                    localStorage.setItem('authToken', data.token);
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                    updateAuthStatus();
+                }
+            } catch (error) {
+                result.textContent = `Error: ${error.message}`;
+            }
+        }
+
+        async function testLogin() {
+            const result = document.getElementById('apiResult');
+            result.textContent = 'Testing login...';
+            
+            try {
+                const response = await fetch(`${API_BASE}/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: 'test@example.com',
+                        password: 'password123'
+                    })
+                });
+                
+                const data = await response.json();
+                result.textContent = JSON.stringify(data, null, 2);
+                
+                if (data.success) {
+                    localStorage.setItem('authToken', data.token);
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                    updateAuthStatus();
+                }
+            } catch (error) {
+                result.textContent = `Error: ${error.message}`;
+            }
+        }
+
+        async function testProfile() {
+            const result = document.getElementById('apiResult');
+            const token = localStorage.getItem('authToken');
+            
+            if (!token) {
+                result.textContent = 'Error: No token found. Please login first.';
+                return;
+            }
+            
+            result.textContent = 'Testing profile...';
+            
+            try {
+                const response = await fetch(`${API_BASE}/profile`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                const data = await response.json();
+                result.textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                result.textContent = `Error: ${error.message}`;
+            }
+        }
+
+        function clearAuth() {
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('user');
+            updateAuthStatus();
+            document.getElementById('apiResult').textContent = 'Authentication cleared!';
+        }
+
+        // Initialize
+        updateAuthStatus();
+    </script>
+</body>
+</html>

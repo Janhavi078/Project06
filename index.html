@@ -49,6 +49,52 @@
 
     <!-- Custom JS -->
     <script defer src="page.js"></script>
+    <script defer src="auth.js"></script>
+
+    <style>
+        /* Glass morphism effect for header */
+        .glass-card {
+            background: rgba(26, 26, 26, 0.8);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* User avatar animation */
+        #userAvatar, #mobileUserAvatar {
+            transition: all 0.3s ease;
+        }
+
+        #userAvatar:hover, #mobileUserAvatar:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 15px rgba(99, 102, 241, 0.5);
+        }
+
+        /* Dropdown animation */
+        #userDropdown {
+            transition: all 0.3s ease;
+            transform-origin: top right;
+        }
+
+        #userDropdown.hidden {
+            opacity: 0;
+            transform: scale(0.95) translateY(-10px);
+        }
+
+        #userDropdown:not(.hidden) {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+        }
+
+        /* Hover effects */
+        .nav-link {
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: #6366F1;
+        }
+    </style>
 </head>
 
 <body class="antialiased bg-brand-dark text-white">
@@ -61,14 +107,58 @@
                     <span class="text-brand-accent mr-2">UniLeap</span>
                 </a>
                 <nav class="hidden md:flex items-center space-x-8">
-                    <a href="#home">Home</a>
-                    <a href="#features">Features</a>
-                    <a href="#courses">Courses</a>
-                    <a href="#testimonials">Testimonials</a>
+                    <a href="#home" class="nav-link">Home</a>
+                    <a href="#features" class="nav-link">Features</a>
+                    <a href="/courses" class="nav-link">Courses</a>
+                    <a href="#testimonials" class="nav-link">Testimonials</a>
                 </nav>
-                <a href="#" class="hidden md:block bg-brand-accent hover:bg-brand-accent-hover text-white font-semibold py-2 px-5 rounded-lg transition">
-                    Get Started
-                </a>
+                <!-- Auth Navigation -->
+                <div id="authNavigation" class="hidden md:flex items-center space-x-4">
+                    <!-- Not Logged In -->
+                    <div id="notLoggedIn" class="flex items-center space-x-4">
+                        <a href="/login" class="text-white hover:text-brand-accent transition">Login</a>
+                        <a href="/signup" class="bg-brand-accent hover:bg-brand-accent-hover text-white font-semibold py-2 px-5 rounded-lg transition">
+                            Sign Up
+                        </a>
+                    </div>
+                    
+                    <!-- Logged In -->
+                    <div id="loggedIn" class="hidden flex items-center space-x-4">
+                        <!-- User Profile -->
+                        <div class="relative">
+                            <button id="userProfileBtn" class="flex items-center space-x-2 text-white hover:text-brand-accent transition">
+                                <div id="userAvatar" class="w-8 h-8 bg-brand-accent rounded-full flex items-center justify-center text-white font-semibold text-sm">
+                                    <!-- User initials will be inserted here -->
+                                </div>
+                                <span id="userName" class="hidden lg:inline">
+                                    <!-- User name will be inserted here -->
+                                </span>
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </button>
+                            
+                            <!-- Dropdown Menu -->
+                            <div id="userDropdown" class="hidden absolute right-0 mt-2 w-48 bg-brand-dark border border-gray-700 rounded-lg shadow-lg z-50">
+                                <div class="py-2">
+                                    <div class="px-4 py-2 border-b border-gray-700">
+                                        <p id="dropdownUserName" class="text-sm font-medium text-white"></p>
+                                        <p id="dropdownUserEmail" class="text-xs text-gray-400"></p>
+                                    </div>
+                                    <a href="#" class="block px-4 py-2 text-sm text-gray-300 hover:bg-brand-accent hover:text-white transition">
+                                        Profile
+                                    </a>
+                                    <a href="#" class="block px-4 py-2 text-sm text-gray-300 hover:bg-brand-accent hover:text-white transition">
+                                        Settings
+                                    </a>
+                                    <button id="logoutBtn" class="w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-red-600 hover:text-white transition">
+                                        Logout
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <button id="mobile-menu-btn" class="md:hidden">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -85,11 +175,32 @@
             <div class="glass-card rounded-xl p-4 flex flex-col space-y-4">
                 <a href="#home">Home</a>
                 <a href="#features">Features</a>
-                <a href="#courses">Courses</a>
+                <a href="/courses">Courses</a>
                 <a href="#testimonials">Testimonials</a>
-                <a href="#" class="bg-brand-accent hover:bg-brand-accent-hover text-white font-semibold py-2 px-5 rounded-lg text-center">
-                    Get Started
-                </a>
+                
+                <!-- Mobile Auth Navigation -->
+                <div id="mobileNotLoggedIn" class="flex flex-col space-y-2">
+                    <a href="/login" class="text-white hover:text-brand-accent transition">Login</a>
+                    <a href="/signup" class="bg-brand-accent hover:bg-brand-accent-hover text-white font-semibold py-2 px-5 rounded-lg text-center">
+                        Sign Up
+                    </a>
+                </div>
+                
+                <div id="mobileLoggedIn" class="hidden flex flex-col space-y-2">
+                    <div class="flex items-center space-x-2 py-2 border-b border-gray-700">
+                        <div id="mobileUserAvatar" class="w-8 h-8 bg-brand-accent rounded-full flex items-center justify-center text-white font-semibold text-sm">
+                        </div>
+                        <div>
+                            <p id="mobileUserName" class="text-sm font-medium text-white"></p>
+                            <p id="mobileUserEmail" class="text-xs text-gray-400"></p>
+                        </div>
+                    </div>
+                    <a href="#" class="text-white hover:text-brand-accent transition">Profile</a>
+                    <a href="#" class="text-white hover:text-brand-accent transition">Settings</a>
+                    <button id="mobileLogoutBtn" class="text-left text-red-400 hover:text-red-300 transition">
+                        Logout
+                    </button>
+                </div>
             </div>
         </div>
     </header>

@@ -197,4 +197,138 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     }
+
+    // --- User Authentication State Management ---
+    function updateNavigationState() {
+        const token = localStorage.getItem('authToken');
+        const userData = localStorage.getItem('userData');
+        
+        // Desktop navigation elements
+        const notLoggedIn = document.getElementById('notLoggedIn');
+        const loggedIn = document.getElementById('loggedIn');
+        const userAvatar = document.getElementById('userAvatar');
+        const userName = document.getElementById('userName');
+        const dropdownUserName = document.getElementById('dropdownUserName');
+        const dropdownUserEmail = document.getElementById('dropdownUserEmail');
+        
+        // Mobile navigation elements
+        const mobileNotLoggedIn = document.getElementById('mobileNotLoggedIn');
+        const mobileLoggedIn = document.getElementById('mobileLoggedIn');
+        const mobileUserAvatar = document.getElementById('mobileUserAvatar');
+        const mobileUserName = document.getElementById('mobileUserName');
+        const mobileUserEmail = document.getElementById('mobileUserEmail');
+
+        if (token && userData) {
+            try {
+                const user = JSON.parse(userData);
+                
+                // Show logged in state
+                if (notLoggedIn) notLoggedIn.classList.add('hidden');
+                if (loggedIn) loggedIn.classList.remove('hidden');
+                if (mobileNotLoggedIn) mobileNotLoggedIn.classList.add('hidden');
+                if (mobileLoggedIn) mobileLoggedIn.classList.remove('hidden');
+                
+                // Get user initials (first letter of first name and last name)
+                const initials = getInitials(user.name);
+                
+                // Update desktop navigation
+                if (userAvatar) userAvatar.textContent = initials;
+                if (userName) userName.textContent = user.name;
+                if (dropdownUserName) dropdownUserName.textContent = user.name;
+                if (dropdownUserEmail) dropdownUserEmail.textContent = user.email;
+                
+                // Update mobile navigation
+                if (mobileUserAvatar) mobileUserAvatar.textContent = initials;
+                if (mobileUserName) mobileUserName.textContent = user.name;
+                if (mobileUserEmail) mobileUserEmail.textContent = user.email;
+                
+            } catch (error) {
+                console.error('Error parsing user data:', error);
+                // Clear invalid data
+                localStorage.removeItem('authToken');
+                localStorage.removeItem('userData');
+                updateNavigationState();
+            }
+        } else {
+            // Show not logged in state
+            if (notLoggedIn) notLoggedIn.classList.remove('hidden');
+            if (loggedIn) loggedIn.classList.add('hidden');
+            if (mobileNotLoggedIn) mobileNotLoggedIn.classList.remove('hidden');
+            if (mobileLoggedIn) mobileLoggedIn.classList.add('hidden');
+        }
+    }
+
+    // Get initials from full name
+    function getInitials(name) {
+        if (!name) return 'U';
+        const names = name.trim().split(' ');
+        if (names.length === 1) {
+            return names[0].charAt(0).toUpperCase();
+        }
+        return (names[0].charAt(0) + names[names.length - 1].charAt(0)).toUpperCase();
+    }
+
+    // Toggle user dropdown
+    function toggleUserDropdown() {
+        const dropdown = document.getElementById('userDropdown');
+        if (dropdown) {
+            dropdown.classList.toggle('hidden');
+        }
+    }
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(event) {
+        const userProfileBtn = document.getElementById('userProfileBtn');
+        const userDropdown = document.getElementById('userDropdown');
+        
+        if (userProfileBtn && userDropdown && !userProfileBtn.contains(event.target)) {
+            userDropdown.classList.add('hidden');
+        }
+    });
+
+    // Logout functionality
+    function logout() {
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('userData');
+        updateNavigationState();
+        
+        // Redirect to home page
+        window.location.href = '/';
+    }
+
+    // Event listeners for dropdown and logout
+    const userProfileBtn = document.getElementById('userProfileBtn');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const mobileLogoutBtn = document.getElementById('mobileLogoutBtn');
+
+    if (userProfileBtn) {
+        userProfileBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            toggleUserDropdown();
+        });
+    }
+
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            logout();
+        });
+    }
+
+    if (mobileLogoutBtn) {
+        mobileLogoutBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            logout();
+        });
+    }
+
+    // Initialize navigation state on page load
+    updateNavigationState();
+
+    // Listen for storage changes (when user logs in/out in another tab)
+    window.addEventListener('storage', function(e) {
+        if (e.key === 'authToken' || e.key === 'userData') {
+            updateNavigationState();
+        }
+    });
 })
