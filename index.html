@@ -139,6 +139,154 @@
         <div id="course-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
     </section>
 
+    <!-- Testimonials Section -->
+    <section id="testimonials" class="py-20 bg-brand-dark">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold text-white mb-4">What Our Users Say</h2>
+                <p class="text-gray-400 max-w-2xl mx-auto">Join thousands of successful professionals who have transformed their careers with UniLeap</p>
+                <button id="showFeedbackForm" class="mt-6 bg-brand-accent hover:bg-brand-accent-hover text-white font-semibold py-2 px-6 rounded-lg transition">
+                    Share Your Experience
+                </button>
+            </div>
+
+            <!-- Feedback Form (initially hidden) -->
+            <div id="feedbackFormContainer" class="hidden max-w-2xl mx-auto mb-16 bg-brand-charcoal p-8 rounded-xl">
+                <h3 class="text-2xl font-bold text-white mb-6">Share Your Feedback</h3>
+                <form id="feedbackForm" class="space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="name" class="block text-gray-300 text-sm font-medium mb-1">Your Name</label>
+                            <input type="text" id="name" required 
+                                class="w-full px-4 py-2 bg-brand-dark border border-gray-700 rounded-lg focus:ring-2 focus:ring-brand-accent focus:outline-none text-white">
+                        </div>
+                        <div>
+                            <label for="role" class="block text-gray-300 text-sm font-medium mb-1">Your Role & Company</label>
+                            <input type="text" id="role" placeholder="e.g., Software Engineer @Company" required
+                                class="w-full px-4 py-2 bg-brand-dark border border-gray-700 rounded-lg focus:ring-2 focus:ring-brand-accent focus:outline-none text-white">
+                        </div>
+                    </div>
+                    <div>
+                        <label for="testimonial" class="block text-gray-300 text-sm font-medium mb-1">Your Feedback</label>
+                        <textarea id="testimonial" rows="4" required
+                            class="w-full px-4 py-2 bg-brand-dark border border-gray-700 rounded-lg focus:ring-2 focus:ring-brand-accent focus:outline-none text-white"></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-gray-300 text-sm font-medium mb-1">Rating</label>
+                        <div class="flex items-center space-x-2">
+                            <div class="rating">
+                                <input type="radio" name="rating" value="5" id="star5" class="hidden" checked>
+                                <label for="star5" class="text-2xl cursor-pointer">★</label>
+                                <input type="radio" name="rating" value="4" id="star4" class="hidden">
+                                <label for="star4" class="text-2xl cursor-pointer">★</label>
+                                <input type="radio" name="rating" value="3" id="star3" class="hidden">
+                                <label for="star3" class="text-2xl cursor-pointer">★</label>
+                                <input type="radio" name="rating" value="2" id="star2" class="hidden">
+                                <label for="star2" class="text-2xl cursor-pointer">★</label>
+                                <input type="radio" name="rating" value="1" id="star1" class="hidden">
+                                <label for="star1" class="text-2xl cursor-pointer">★</label>
+                            </div>
+                            <span id="ratingValue" class="text-yellow-400 ml-2">5.0</span>
+                        </div>
+                    </div>
+                    <div class="flex justify-end space-x-3 pt-2">
+                        <button type="button" id="cancelFeedback" class="px-4 py-2 text-gray-300 hover:text-white">
+                            Cancel
+                        </button>
+                        <button type="submit" class="bg-brand-accent hover:bg-brand-accent-hover text-white font-semibold py-2 px-6 rounded-lg transition">
+                            Submit Feedback
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div id="testimonialsContainer" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- User-submitted testimonials will appear here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- JavaScript for Testimonials -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const feedbackForm = document.getElementById('feedbackForm');
+            const feedbackFormContainer = document.getElementById('feedbackFormContainer');
+            const showFeedbackBtn = document.getElementById('showFeedbackForm');
+            const cancelFeedbackBtn = document.getElementById('cancelFeedback');
+            const ratingInputs = document.querySelectorAll('input[name="rating"]');
+            const ratingValue = document.getElementById('ratingValue');
+            const testimonialsContainer = document.getElementById('testimonialsContainer');
+
+            // Toggle feedback form
+            showFeedbackBtn.addEventListener('click', () => {
+                feedbackFormContainer.classList.toggle('hidden');
+                window.scrollTo({
+                    top: feedbackFormContainer.offsetTop - 100,
+                    behavior: 'smooth'
+                });
+            });
+
+            // Close feedback form
+            cancelFeedbackBtn.addEventListener('click', () => {
+                feedbackFormContainer.classList.add('hidden');
+                feedbackForm.reset();
+                ratingValue.textContent = '5.0';
+                document.getElementById('star5').checked = true;
+            });
+
+            // Update rating display
+            ratingInputs.forEach(input => {
+                input.addEventListener('change', (e) => {
+                    ratingValue.textContent = `${e.target.value}.0`;
+                });
+            });
+
+            // Handle form submission
+            feedbackForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                const name = document.getElementById('name').value;
+                const role = document.getElementById('role').value;
+                const testimonial = document.getElementById('testimonial').value;
+                const rating = document.querySelector('input[name="rating"]:checked').value;
+                
+                // Create new testimonial element
+                const initials = name.split(' ').map(n => n[0]).join('').toUpperCase();
+                const randomColor = ['bg-pink-500', 'bg-blue-500', 'bg-purple-500', 'bg-green-500', 'bg-yellow-500'][Math.floor(Math.random() * 5)];
+                
+                const testimonialHTML = `
+                    <div class="bg-brand-charcoal p-8 rounded-xl hover:transform hover:scale-105 transition-transform duration-300">
+                        <div class="flex items-center mb-6">
+                            <div class="w-12 h-12 rounded-full ${randomColor} flex items-center justify-center text-xl font-bold text-white mr-4">
+                                ${initials}
+                            </div>
+                            <div>
+                                <h4 class="text-white font-semibold">${name}</h4>
+                                <p class="text-gray-400 text-sm">${role}</p>
+                            </div>
+                        </div>
+                        <p class="text-gray-300">"${testimonial}"</p>
+                        <div class="mt-4 flex text-yellow-400">
+                            ${'★'.repeat(rating)}${'☆'.repeat(5-rating)}
+                        </div>
+                    </div>
+                `;
+                
+                // Add new testimonial to the container
+                testimonialsContainer.insertAdjacentHTML('afterbegin', testimonialHTML);
+                
+                // Reset form
+                feedbackForm.reset();
+                ratingValue.textContent = '5.0';
+                document.getElementById('star5').checked = true;
+                feedbackFormContainer.classList.add('hidden');
+                
+                // Show success message
+                alert('Thank you for your feedback! Your testimonial has been added.');
+            });
+        });
+    </script>
+
     <!-- Footer -->
     <footer class="border-t border-gray-800 mt-24">
         <div class="container mx-auto px-6 py-8 text-center text-gray-400">
