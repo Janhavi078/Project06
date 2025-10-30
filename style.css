@@ -24,4 +24,21 @@
         .animated-element {
             opacity: 1;
         }
+
+        /* Free Courses cards */
+        #learn .glass-card,
+        #learn a.block {
+            border: 1px solid rgba(255,255,255,0.04);
+        }
+
+        #learn img {
+            background: #0b0b0b;
+        }
+
+        @media (max-width: 640px) {
+            /* Ensure single column on small screens */
+            #learn .grid {
+                grid-template-columns: 1fr;
+            }
+        }
    
